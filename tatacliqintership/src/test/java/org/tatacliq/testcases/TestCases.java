@@ -1,9 +1,14 @@
 package org.tatacliq.testcases;
 
+import java.time.Duration;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.tatacliq.base.BaseClass;
 import org.tatacliq.pages.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -11,18 +16,18 @@ public class TestCases extends BaseClass {
 	
 LoginPage loginpageobj;
 	
-	@BeforeMethod
+	@BeforeClass
 	public void objinit() 
 	{
 		loginpageobj=new LoginPage(driver);				
 	}
 	
 	@AfterClass
-	public void tearDown() {
-	    if (driver != null) {
-	        driver.quit(); 
-	    }
+	public void tearDown() 
+	{  
+	  driver.quit(); 
 	}
+	
 	@Test(priority=1)
     public void verifyTataCliqHomePageElements_01() 
 	{
@@ -39,28 +44,30 @@ LoginPage loginpageobj;
 		Assert.assertEquals(act_text, Constants.Expected_text);
 		loginpageobj.clickCategory();
 	}
-	@Test(priority=3)
-	public void verifyGadgetmenu_03() {
-		String actual_gadtext=loginpageobj.verifyGadgetsbutton();
-		Assert.assertEquals(actual_gadtext, Constants.Expected_gadtext);
-		loginpageobj.gadbuttonClick();
-	}
-	@Test(priority=4)
-	public void verifyElectronicsTitle_04() {
-		Assert.assertTrue(loginpageobj.isElectronicsTitleDisplayed(), "Title not displayed");
-	}
-	@Test(priority=5)
-	public void searchAppleProduct_05() 
-	{
-	    loginpageobj.searchProduct("apple airpod pro 2nd");
-	    Assert.assertTrue(loginpageobj.isAppleAirpodsProDisplayed(), 
-	            "Apple AirPods Pro (2nd Generation) product is not displayed!");
-	    System.out.println("Apple AirPods Pro (2nd Generation) is displayed.");
-	}
-	@Test
-	public void 
+	
+	@Test(priority = 3, dependsOnMethods = {"verifyCategoryElement_02"})
+	public void clickKidsFashion_03() {
+	    loginpageobj.clickKidsFashion();
+	    Assert.assertTrue(driver.getCurrentUrl().contains("kids"), "URL does not contain expected keyword!");
 	}
 	
+	@Test(priority = 4, dependsOnMethods = {"clickKidsFashion_03"})
+	public void verifyKidsFashionPage_04() {
+	    loginpageobj.dismissPopupIfPresent();    // Dismiss popup if visible
+	    Assert.assertTrue(loginpageobj.isKidsTitleDisplayed(), 
+	        "Kids Online title not displayed as expected!");
+
+	    System.out.println("Verified: 'Kids Online' title is displayed.");
+	}
+	
+	@Test(priority = 5, dependsOnMethods = {"verifyKidsFashionPage_04"})
+	public void verifyInfantsFilter_05() {
+	    loginpageobj.clickInfantsFilter();
+	    Assert.assertTrue(loginpageobj.isInfantsTitleDisplayed(), 
+	        "'Infants Online' title not displayed after selecting Infants filter.");
+	    System.out.println("Verified: 'Infants Online' title is displayed.");
+	}
+}
 	
 	
 	
