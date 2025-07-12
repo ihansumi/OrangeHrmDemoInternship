@@ -6,4 +6,5 @@ public class Constants {
 	public static final String expected_Price = "₹21999";
 	public static final String expected_title = "Apple AirPods Pro (2nd Generation) with MagSafe Case (USB-C)";
 	public static final String expected_Bag_Url = "https://www.tatacliq.com/cart";
+	public static final int EXPECTED_BUMZEE_PRICE = 419;
 }

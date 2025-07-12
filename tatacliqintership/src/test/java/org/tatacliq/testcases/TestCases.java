@@ -1,15 +1,9 @@
 package org.tatacliq.testcases;
 
-import java.time.Duration;
-
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.tatacliq.base.BaseClass;
 import org.tatacliq.pages.LoginPage;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class TestCases extends BaseClass {
@@ -22,11 +16,11 @@ LoginPage loginpageobj;
 		loginpageobj=new LoginPage(driver);				
 	}
 	
-	@AfterClass
+	/*@AfterClass
 	public void tearDown() 
 	{  
 	  driver.quit(); 
-	}
+	}*/
 	
 	@Test(priority=1)
     public void verifyTataCliqHomePageElements_01() 
@@ -66,6 +60,41 @@ LoginPage loginpageobj;
 	    Assert.assertTrue(loginpageobj.isInfantsTitleDisplayed(), 
 	        "'Infants Online' title not displayed after selecting Infants filter.");
 	    System.out.println("Verified: 'Infants Online' title is displayed.");
+	}
+	
+	@Test(priority = 6)
+	public void verifyBumzeeProductPageOpensCorrectly_06() {
+	    
+		loginpageobj.clickBumzeeProduct();
+		loginpageobj.switchToNewTab();
+
+	    Assert.assertTrue(loginpageobj.isBumzeeProductURLCorrect(), "Bumzee product URL is incorrect or product page not opened.");
+	    System.out.println("Bumzee product page opened successfully.");
+	}
+	
+	@Test(priority = 7)
+	public void verifyBumzeeProductPriceIsCorrect_07() 
+	{	    
+	    int actualPrice = loginpageobj.getProductPrice();
+	    Assert.assertEquals(actualPrice, Constants.EXPECTED_BUMZEE_PRICE, 
+	        "Product price does not match! Expected: " + Constants.EXPECTED_BUMZEE_PRICE + " but got: " + actualPrice);	    
+	    System.out.println("Product price is correctly displayed as ₹" + actualPrice);
+	}
+	
+	@Test(priority = 8)
+	public void verifyCartPageAfterAddToBag_08() {
+	    
+		loginpageobj.selectSize();
+	    System.out.println("Size selected successfully.");
+
+	    loginpageobj.safeClickAddToBag();
+	    System.out.println("Product added to bag.");
+
+	    loginpageobj.clickGoToBag();
+	    System.out.println("Navigated to bag.");
+
+	    Assert.assertTrue(loginpageobj.isCartUrlCorrect(), "Cart URL does not contain '/cart'");
+	    System.out.println("Cart page verified with correct URL.");
 	}
 }
 	
